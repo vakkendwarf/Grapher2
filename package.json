@@ -1,0 +1,30 @@
+{
+  "name": "msgctr",
+  "version": "4.0.2",
+  "description": "Trying to put messengercounter in heroku.",
+  "main": "server.js",
+  "dependencies": {
+	"facebook-chat-api":"latest",
+	"chalk":"latest",
+	"express":"latest",
+	"socket.io":"latest"
+  },
+  "engine": {
+    "node": "*",
+    "npm": "*"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "IP=0.0.0.0 PORT=3030 mocha --timeout 5000 tests/*_test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/vakkendwarf/msgctr"
+  },
+  "author": "Stanislaw Knapinski <vakkendwarf@gmail.com>",
+  "license": "CC-BY-1.0",
+  "bugs": {
+    "url": "http://github.com/vakkendwarf/msgctr2/issues"
+  },
+  "homepage": "http://github.com/vakkendwarf/msgctr2"
+}

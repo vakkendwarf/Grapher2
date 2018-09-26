@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	
+		<title>Counter</title>
+		
+		<base href="/">
+		
+		<link rel="icon" type="image/png" href="https://i.imgur.com/9XmsBYM.png">
+		<link rel="apple-touch-icon" sizes="57x57" href="https://i.imgur.com/OeGwxg7.png" />
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="/css/mdb.css">
+		
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				var socket = io();
+				socket.on('change_text_ct', function(data) {
+					document.getElementById('ct').innerHTML = data.pagetext;
+				});
+				socket.on('change_text_ti', function(data) {
+					document.getElementById('ti').innerHTML = data.pagetext;
+				});
+				socket.on('change_text_ut', function(data) {
+					document.getElementById('ut').innerHTML = data.pagetext;
+				});
+			});
+			
+		</script>
+			
+	</head>
+	
+	<body style="width: 100%">
+		<center>
+		
+		<nav class="navbar navbar-dark bg-dark">
+			<img type="image/png" src="https://i.imgur.com/9XmsBYM.png" width="30" height="30" class="d-inline-block align-top" alt="error"></img>
+			<a class="navbar-brand" style="color: white;">C v4.8 HTML LOG</a>
+		</nav>
+		
+		</br>
+		
+		<div class="row">
+			<div class="col"></div>
+			
+			<div class="col">
+				<table class="table table-striped table-bordered">
+					<tr>
+						<td><span id="ct" class="btn btn-success" style="margin-top: 5px; margin-bottom: 5px;"></span> <span class="btn btn-success">Messages total</span></td>
+					</tr>
+					<tr>
+						<td><span class="btn btn-info" style="margin-top: 5px; margin-bottom: 5px;">Last message sent at</span> <span id="ti" class="btn btn-info"></span></td>
+					</tr>
+					<tr>
+						<td><span id="ut" class="btn btn-secondary" style="margin-top: 5px; margin-bottom: 5px;"></span> <span class="btn btn-secondary">Messages until next 1000</span></td>
+					</tr>
+				</table>
+				</div>
+			
+			<div class="col"></div>
+			</div>
+		
+		</div>
+		
+	</body>
+	
+</html>

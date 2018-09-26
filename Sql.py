@@ -31,7 +31,6 @@ def pull_entire_db():
 
     return data
 
-
 def pull_daily_db():
 
     # only gets midnight values (for per day graph)
