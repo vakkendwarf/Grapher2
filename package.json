@@ -4,10 +4,11 @@
   "description": "Trying to put messengercounter in heroku.",
   "main": "server.js",
   "dependencies": {
-	"facebook-chat-api":"latest",
-	"chalk":"latest",
-	"express":"latest",
-	"socket.io":"latest"
+    "chalk": "^2.4.1",
+    "express": "^4.16.3",
+    "facebook-chat-api": "^1.6.0",
+    "node-geocoder": "^3.22.0",
+    "socket.io": "^2.1.1"
   },
   "engine": {
     "node": "*",

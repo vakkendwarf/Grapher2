@@ -1,13 +1,28 @@
-﻿const login = require ("facebook-chat-api");
-const chalk = require ("chalk");
-const fs = require ("fs");
+﻿/*jslint undef: true */
+
+const version = "4.9 (Jakdojade Edition)"
+const threadID = "100005341296717"
+
+const login =   require ("facebook-chat-api");
+const chalk =   require ("chalk");
+const fs =      require ("fs");
 const express = require ("express");
+const ngeocode = require ("node-geocoder");
+
+const geocodeoptions = {
+    provider: 'opencage',
+    httpAdapter: 'https',
+    apiKey:  '5103002a40c64aeeae57270fe17863df',
+    formatter: null,
+};
+
+const geocoder = ngeocode(geocodeoptions);
 
 // SERVER & PAGE
 
-var app = require('express')();
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+var app =       require('express')();
+var server =    require('http').createServer(app);
+var io =        require('socket.io')(server);
 
 app.use(express.static(__dirname));
 
@@ -24,13 +39,32 @@ else{
 	sysLog("Listening on port 8080");
 }
 
-
-
 var dir = __dirname;
 
 app.get('/', function(req, res) {
     res.sendFile(dir + '/index.html');
 });
+
+function getCoordsFromAddress(address, callback){
+    let result;
+    geocoder.geocode(address)
+      .then(function(res) {
+        var resultArr = res[0];
+        var resultLat = resultArr['latitude'];
+        var resultLon = resultArr['longitude'];
+        console.log(res)
+        sysLog(resultLat.toString());
+        sysLog(resultLon.toString());
+        result = resultLat.toString() + ":" + resultLon.toString();
+        callback(result, resultLat, resultLon);
+      })
+      .catch(function(err) {
+        sysErr(err);
+      });
+        sysLog(result);
+    }
+
+
 
 function uCT(newtext){
 		var pagetext = newtext;
@@ -112,9 +146,86 @@ function properLogin () {
 		api.setOptions({
 			forceLogin: true
 		});
-		
+        
+        api.setOptions({selfListen: true})
+        
+        function jakdojade(addresses){
+                let coor1;
+                let coor2;
+                let addressStart = addresses.split(",")[0];
+                let addressEnd = addresses.substring(addresses.indexOf(",")+1);
+                console.log("as " + addressStart);
+                console.log("as " + addressEnd);
+                getCoordsFromAddress(addressStart, function(result){
+                coor1 = result;
+                getCoordsFromAddress(addressEnd, function(result){
+                coor2 = result;
+                sysLog(coor1);
+                sysLog(coor2);
+                 api.sendMessage("[BOT] >> Jakdojade compiled.", threadID);
+                 api.sendMessage("http://warszawa.jakdojade.pl/?fc=" + coor1 + "&tc=" + coor2 + "&t=2&as=true", threadID)
+                }); 
+                }); 
+        }
+        function cmdCheckMsg() {
+            api.getThreadInfo(threadID, (err, ret) => {
+                if(err) return sysErr("Getting messages");
+                
+                api.sendMessage("[BOT] >> Current message count: " + ret["messageCount"], threadID);
+                sysLog(ret["messageCount"]);
+                
+                return ret["messageCount"];
+            })
+        }
+        
+        api.listen((err,message) => {
+            if(message.threadID === threadID){
+            if(message.body === ".version"){
+                api.sendMessage("[BOT] >> This is C v" + version + " . The BOT is online.", threadID);
+            }
+            if(message.body === ".count"){
+                cmdCheckMsg();
+            }
+            if(message.body.split(' ')[0] === ".coords"){
+                console.log(message.body.substring(message.body.indexOf(" ")+1));
+                getCoordsFromAddress(message.body.substring(message.body.indexOf(" ")+1), function(result){
+                 api.sendMessage("[BOT] >> Retrieved coordinates: " + result, threadID);  
+                });             
+            }
+                
+            if(message.body.split(' ')[0] === ".jakdojade"){
+                let coor1;
+                let coor2;
+                let addresses = message.body.substring(message.body.indexOf(" ")+1);
+                let addressStart = addresses.split(",")[0];
+                let addressEnd = addresses.substring(addresses.indexOf(",")+1);
+                console.log("as " + addressStart);
+                console.log("as " + addressEnd);
+                getCoordsFromAddress(addressStart, function(result){
+                coor1 = result;
+                getCoordsFromAddress(addressEnd, function(result){
+                coor2 = result;
+                sysLog(coor1);
+                sysLog(coor2);
+                 api.sendMessage("[BOT] >> Jakdojade compiled.", threadID);
+                 api.sendMessage("http://warszawa.jakdojade.pl/?fc=" + coor1 + "&tc=" + coor2 + "&t=2&as=true", threadID)
+                }); 
+                });     
+            }
+                
+            if(message.body === ".wracam"){
+                let addresses = "Walecznych 23 Warszawa,Reszelska 10 Warszawa";
+                jakdojade(addresses);
+            }
+            if(message.body === ".jade"){
+                let addresses = "Reszelska 10 Warszawa,Walecznych 23 Warszawa";
+                jakdojade(addresses);
+            }
+            }
+        });
+        
 		function chkMsg() {
-			api.getThreadInfo("100005341296717", (err, ret) => {
+			api.getThreadInfo(threadID, (err, ret) => {
 				if(err) return sysErr("Getting messages");
 				
 				var currentcount = ret["messageCount"];
@@ -144,7 +255,7 @@ function properLogin () {
 }
 
 
-sysLog("Starting C v4.8");
+sysLog("Starting C v" + version);
 
 properLogin();
 
