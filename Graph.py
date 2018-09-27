@@ -17,6 +17,7 @@ plotly.tools.set_credentials_file(username='vakken',
 
 stream_ids = tls.get_credentials_file()['stream_ids']
 
+
 def get_stream(no):
 
     outstream = go.scatter.Stream(
@@ -208,7 +209,7 @@ def streamit(date, amt, graphtype):
     x = date
     y = amt
     s.write(dict(x=x, y=y))
-    s.close()
+    print("Stream connection status: " + str(s.connected))
     s.heartbeat()
-
+    s.close()
     print("Streaming successful")

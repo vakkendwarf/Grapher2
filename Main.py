@@ -11,5 +11,4 @@ import datetime
 # Mg.plotarray(alldb)
 # Mg.plotarray(daydb)
 
-Mg.streamit(datetime.date(2018, 9, 30), 330000, "total")
-
+# Mg.streamit(datetime.date(2018, 10, 1), 360000, "total")
