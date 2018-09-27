@@ -17,7 +17,6 @@ plotly.tools.set_credentials_file(username='vakken',
 
 stream_ids = tls.get_credentials_file()['stream_ids']
 
-
 def get_stream(no):
 
     outstream = go.scatter.Stream(
@@ -194,3 +193,19 @@ def plotdailyarr(arr):
 
     print("Daily array plotting finished.")
 
+
+def streamit(date, amt, graphtype):
+
+    if graphtype == "daily":
+        index = 4
+    elif graphtype == "total":
+        index = 0
+    else:
+        return TypeError("Wrong graph type supplied.")
+
+    s = py.Stream(stream_ids[index])
+    s.open()
+    x = date
+    y = amt
+    s.write(x=x, y=y)
+    s.close()
