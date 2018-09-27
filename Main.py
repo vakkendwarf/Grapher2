@@ -3,12 +3,13 @@ import Sql as SqlI
 import sys
 import datetime
 
-#if sys.argv[1] and sys.argv[2] is not None:
-#    SqlI.insert_into_db(sys.argv[1], sys.argv[2])
-Mg.streamit(datetime.date(2018, 9, 27), 300000, "total")
+# if sys.argv[1] and sys.argv[2] is not None:
+#     SqlI.insert_into_db(sys.argv[1], sys.argv[2])
+# daydb = SqlI.pull_daily_db()
+# alldb = SqlI.pull_entire_db()
 
-daydb = SqlI.pull_daily_db()
-alldb = SqlI.pull_entire_db()
+# Mg.plotarray(alldb)
+# Mg.plotarray(daydb)
 
-Mg.plotarray(alldb)
-Mg.plotdailyarr(daydb)
+Mg.streamit(datetime.date(2018, 9, 30), 330000, "total")
+

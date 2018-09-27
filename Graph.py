@@ -207,5 +207,8 @@ def streamit(date, amt, graphtype):
     s.open()
     x = date
     y = amt
-    s.write(x=x, y=y)
+    s.write(dict(x=x, y=y))
     s.close()
+    s.heartbeat()
+
+    print("Streaming successful")

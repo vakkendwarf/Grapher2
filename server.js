@@ -180,12 +180,15 @@ function properLogin () {
         
         api.listen((err,message) => {
             if(message.threadID === threadID){
+                
             if(message.body === ".version"){
                 api.sendMessage("[BOT] >> This is C v" + version + " . The BOT is online.", threadID);
             }
+                
             if(message.body === ".count"){
                 cmdCheckMsg();
             }
+                
             if(message.body.split(' ')[0] === ".coords"){
                 console.log(message.body.substring(message.body.indexOf(" ")+1));
                 getCoordsFromAddress(message.body.substring(message.body.indexOf(" ")+1), function(result){
