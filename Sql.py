@@ -1,4 +1,4 @@
-import MySQLdb as Sql
+import mysql.connector as Sql
 import datetime
 
 # this is not safe
