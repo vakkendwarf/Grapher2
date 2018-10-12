@@ -1,5 +1,11 @@
 import mysql.connector as Sql
 import datetime
+import enum
+
+
+class DBType(enum.Enum):
+    ALL = 1
+    DAILY = 2
 
 # this is not safe
 # TODO: read credentials from a file (possibly encrypted)
@@ -30,6 +36,27 @@ def pull_entire_db():
     print("Database pulling finished.")
 
     return data
+
+
+def pull_last_n_entries(n):
+
+    db.connect()
+    print("Clock: " + str(datetime.datetime.now()))
+    cur = db.cursor()
+    query = "SELECT * FROM GRAND_WAVE_ALLDATA ORDER BY I DESC LIMIT 1"
+    cur.execute(query)
+    data = cur.fetchall()
+    id = data[0][0]
+    print("ID: " + str(id))
+    n = id - n
+    query = "SELECT * FROM GRAND_WAVE_ALLDATA WHERE I > %s"
+    args = n
+    cur.execute(query, [args])
+    data = cur.fetchall()
+    print(data[len(data)-1])
+    db.close()
+    return data
+
 
 def pull_daily_db():
 
@@ -74,7 +101,7 @@ def insert_into_db(datev, amt):
     # fun fact: this will be very rarely used (in an event where there are two or more messages sent in one second)
     # it will only use the biggest amount.
 
-    if data != ():
+    if str(data) != "[]":
 
         # mostly debug console prints, very useful.
 
@@ -114,8 +141,6 @@ def insert_into_db(datev, amt):
 
         query = "INSERT INTO GRAND_WAVE_ALLDATA (datev, amt) VALUES (%s, %s)"
         args = (datev, amt)
-
-        print(query, args)
 
         cur.execute(query, args)
         db.commit()

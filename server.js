@@ -1,13 +1,19 @@
 ﻿/*jslint undef: true */
 
-const version = "4.9 (Jakdojade Edition)"
+// CONSTANTS
+
+const version = "5.0 (Database: Integrated Edition)"
 const threadID = "100005341296717"
+
+// MODULES
 
 const login =   require ("facebook-chat-api");
 const chalk =   require ("chalk");
 const fs =      require ("fs");
 const express = require ("express");
 const ngeocode = require ("node-geocoder");
+
+// JAKDOJADE EDITION FUNCTIONS
 
 const geocodeoptions = {
     provider: 'opencage',
@@ -30,7 +36,7 @@ var cumsg;
 var cutim;
 var cutho;
 
-if(process.env.PORT != undefined){
+if(process.env.PORT !== undefined){
 	server.listen(process.env.PORT);
 	sysLog("Listening on port " + process.env.PORT);
 }
@@ -93,6 +99,10 @@ var lastcount = 0;
  
 function sysLog(text) {
 	console.log(chalk.red("SYS")+chalk.bold(" >> ")+chalk.gray(text)+chalk.gray("... ")+chalk.green.bold("OK"));
+}
+
+function pyLog(text) {
+    console.log(chalk.green("PYTHON INTERFACE OUTPUT")+chalk.bold(" >>\n ")+chalk.gray(text))
 }
 
 function sysErr(text) {
@@ -167,6 +177,7 @@ function properLogin () {
                 }); 
                 }); 
         }
+
         function cmdCheckMsg() {
             api.getThreadInfo(threadID, (err, ret) => {
                 if(err) return sysErr("Getting messages");
@@ -186,7 +197,7 @@ function properLogin () {
             }
                 
             if(message.body === ".count"){
-                cmdCheckMsg();
+                cmdCheckMsg(true);
             }
                 
             if(message.body.split(' ')[0] === ".coords"){
@@ -227,20 +238,38 @@ function properLogin () {
             }
         });
         
-		function chkMsg() {
+		function chkMsg(isFirst=false) {
 			api.getThreadInfo(threadID, (err, ret) => {
+
+			    if(lastcount === 0){isFirst=true}
+			    if(isFirst){sysLog("Executing CHKMSG without PYTHON")}
 				if(err) return sysErr("Getting messages");
 				
 				var currentcount = ret["messageCount"];
 				
 				if(lastcount < currentcount) {
+
 					lastcount = currentcount;
 					
 					if(isNextMsgMilestone(currentcount)){
 						api.sendMessage("[BOT] >> Nastepna wiadomość to > " + (currentcount+2) + "!", "100005341296717");
 					}
+
+					   var curtime = getTime();
+
+                    if(!isFirst){
+                        var spawn = require("child_process").spawn;
+                        var process = spawn('py', ["interface.py",
+                            curtime,
+                            currentcount]);
+                        process.stdout.on('data', function(data) {
+                        pyLog(data.toString());
+                    } )
+                    }
+
+
 					
-					dateLog(getTime(), currentcount);
+					dateLog(curtime, currentcount);
 					return true;
 				}
 				
