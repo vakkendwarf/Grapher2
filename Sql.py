@@ -41,19 +41,16 @@ def pull_entire_db():
 def pull_last_n_entries(n):
 
     db.connect()
-    print("Clock: " + str(datetime.datetime.now()))
     cur = db.cursor()
     query = "SELECT * FROM GRAND_WAVE_ALLDATA ORDER BY I DESC LIMIT 1"
     cur.execute(query)
     data = cur.fetchall()
     id = data[0][0]
-    print("ID: " + str(id))
     n = id - n
     query = "SELECT * FROM GRAND_WAVE_ALLDATA WHERE I > %s"
     args = n
     cur.execute(query, [args])
     data = cur.fetchall()
-    print(data[len(data)-1])
     db.close()
     return data
 

@@ -12,3 +12,6 @@ import datetime
 # Mg.plotdailyarr(daydb)
 
 # Mg.streamit(datetime.date(2018, 10, 1), 360000, "total")
+
+alldb = SqlI.pull_entire_db()
+Mg.plotarray(alldb)

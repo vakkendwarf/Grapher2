@@ -66,7 +66,7 @@ def plotarray(arr):
 
     # separate input data into arrays
 
-    for i, j in arr:
+    for l, i, j in arr:
 
         # only count the per day average (by only using midnight data nodes)
 
@@ -136,7 +136,7 @@ def plotdailyarr(arr):
 
     k = 0
 
-    for i, j in arr:
+    for l, i, j in arr:
 
         # separating arr
 
